@@ -10,6 +10,7 @@ class PKPass
 {
 
     private static $ENV = null;
+    private static $params = null;
 
     public static function env(string $key,mixed $default=false)
     {
@@ -37,6 +38,15 @@ class PKPass
         return self::$ENV;
     }
 
+    public static function param(string $key,mixed $default=false)
+    {
+        $env = self::$params;
+        if (isset($env[$key])) {
+            return $env[$key];
+        }
+        return $default;
+    }
+
     public static function binary(string $data):mixed
     {
         list($mime,$data) =  explode(',',$data);
@@ -45,15 +55,13 @@ class PKPass
 
     public static function pass(
         string $id,
-        string $balance,
-        string $name,
-        string $description
+        array $params
     ) : mixed {
         $pass = new Pass();
         $files=DSFiles::instance('tualocms_bilder');
-        file_put_contents(App::get('tempPath').'/c.p12', base64_decode(str_replace('data:application/x-pkcs12;base64,','',$files->getBase64('titel',self::env('apple_certificate')))));
-        file_put_contents(App::get('tempPath').'/AppleWWDR.cer', base64_decode(str_replace('data:application/x-x509-ca-cert;base64,','',$files->getBase64('titel',self::env('apple_wwdr_certificate')))));
-
+        file_put_contents(App::get('tempPath').'/c.p12', self::binary($files->getBase64('titel',self::env('apple_certificate'))));
+        file_put_contents(App::get('tempPath').'/AppleWWDR.cer', self::binary($files->getBase64('titel',self::env('apple_wwdr_certificate'))));
+        self::$params = $params;
         $pass->setCertificatePath(App::get('tempPath').'/c.p12'); // Set the path to your Pass Certificate (.p12 file)
         $pass->setCertificatePassword(self::env('apple_cert_pass')); // Set password for certificate
         $pass->setWwdrCertificatePath(App::get('tempPath').'/AppleWWDR.cer');
@@ -65,97 +73,74 @@ class PKPass
             "serialNumber": "' . $id . '",
             "backgroundColor": "rgb(240,240,240)",
             "logoText": "'.self::env('apple_logoText').'",
-            "description": "' . $description . '",
+            "description": "' . self::param('description','*description* nicht angegeben') . '",
             "eventTicket": {
                 "auxiliaryFields": [
                     {
                         "changeMessage": "restxt_chg_seat",
                         "key": "KEY_AUX_SEAT_1",
-                        "label": "Eingang",
-                        "value": "Parkett links"
-                    },
-                    {
-                        "changeMessage": "restxt_chg_seat",
-                        "key": "KEY_AUX_SEAT_2",
-                        "label": "Block",
-                        "value": "Parkett links"
-                    },
-                    {
-                        "changeMessage": "restxt_chg_seat",
-                        "key": "KEY_AUX_SEAT_3",
-                        "label": "Reihe",
-                        "value": "17"
-                    },
-                    {
-                        "changeMessage": "restxt_chg_seat",
-                        "key": "KEY_AUX_SEAT_4",
-                        "label": "Platz",
-                        "value": "6"
+                        "label": "'.self::param('KEY_AUX_SEAT_1:LABEL','').'",
+                        "value": "'.self::param('KEY_AUX_SEAT_1:VALUE','').'"
                     }
                 ],
                 "backFields": [
                     {
                         "key": "KEY_ADDITIONAL_ACCESSCODE",
-                        "label": "restxt_additional_accesscode",
-                        "value": "28FW44SB"
+                        "label": "'.self::param('KEY_ADDITIONAL_ACCESSCODE:LABEL','').'",
+                        "value": "'.self::param('KEY_ADDITIONAL_ACCESSCODE:VALUE','').'"
                     },
                     {
                         "changeMessage": "restxt_chg_event",
                         "key": "KEY_EVENTLINE",
-                        "label": "restxt_event",
-                        "value": "'.$name.'"
+                        "label": "'.self::param('KEY_EVENTLINE:LABEL','').'",
+                        "value": "'.self::param('KEY_EVENTLINE:VALUE','').'"
                     },
                     {
                         "changeMessage": "restxt_chg_venue",
                         "key": "KEY_LOCATION",
-                        "label": "restxt_venue",
-                        "value": "Stage Theater des Westens\nKantstraße 12 , 10623 BERLIN, DE"
-                    },
-                    {
-                        "key": "KEY_BACK_SEATLINE",
-                        "label": "restxt_seat",
-                        "value": "Eingang: Parkett links, Block: Parkett links, Reihe: 17, Platz: 6"
+                        "label": "'.self::param('KEY_LOCATION:LABEL','').'",
+                        "value": "'.self::param('KEY_LOCATION:VALUE','').'"
                     },
                     {
                         "key": "KEY_BACK_PRICE",
-                        "label": "restxt_price",
-                        "value": "Kategorie 2\nNormalpreis"
+                        "label": "'.self::param('KEY_BACK_PRICE:LABEL','').'",
+                        "value": "'.self::param('KEY_BACK_PRICE:VALUE','').'"
                     },
                     {
                         "changeMessage": "restxt_chg_additional",
                         "key": "KEY_BACK_DATA_Additional_Front1",
-                        "label": "Hinweise:",
-                        "value": "Foyeröffnung ab 1 Std. vor Vorstellungsbeginn. Nach Vorstellungsbeginn kein Einlass.\n"
+                        "label": "'.self::param('KEY_BACK_DATA_Additional_Front1:LABEL',' ').'",
+                        "value": "'.self::param('KEY_BACK_DATA_Additional_Front1:VALUE',' ').'"
                     },
                     {
                         "changeMessage": "restxt_chg_additional",
                         "key": "KEY_BACK_DATA_Additional_Front2",
-                        "label": "",
-                        "value": "Ermäßigungsnachweise bitte beim Einlass vorzeigen."
+                        "label": "'.self::param('KEY_BACK_DATA_Additional_Front2:LABEL',' ').'",
+                        "value": "'.self::param('KEY_BACK_DATA_Additional_Front2:VALUE',' ').'"
                     },
                     {
                         "changeMessage": "restxt_chg_additional",
                         "key": "KEY_BACK_DATA_Additional_Front3",
-                        "label": "",
-                        "value": "Umtausch und Rückgabe von Tickets ist ausgeschlossen."
+                        "label": "'.self::param('KEY_BACK_DATA_Additional_Front3:LABEL',' ').'",
+                        "value": "'.self::param('KEY_BACK_DATA_Additional_Front3:VALUE',' ').'"
                     },
                     {
                         "changeMessage": "restxt_chg_additional",
                         "key": "KEY_BACK_DATA_Additional_Front4",
-                        "label": "",
-                        "value": "Kein Einlass für Kinder unter 3 Jahren."
+                        "label": "'.self::param('KEY_BACK_DATA_Additional_Front4:LABEL',' ').'",
+                        "value": "'.self::param('KEY_BACK_DATA_Additional_Front4:VALUE',' ').'"
                     },
                     {
                         "changeMessage": "restxt_chg_additional",
                         "key": "KEY_BACK_DATA_Additional_Front5",
-                        "label": "",
-                        "value": "Aus urheberrechtlichen Gründen sind Bild- und Tonaufnahmen nicht gestattet."
+                        "label": "'.self::param('KEY_BACK_DATA_Additional_Front5:LABEL',' ').'",
+                        "value": "'.self::param('KEY_BACK_DATA_Additional_Front5:VALUE',' ').'"
                     },
                     {
                         "changeMessage": "restxt_chg_additional",
                         "key": "KEY_BACK_DATA_Additional_Front6",
-                        "label": "",
-                        "value": "Bitte beachten Sie, dass am Einlass Sicherheitskontrollen stattfinden. Planen Sie daher ein, ca. eine Stunde vor Vorstellungsbeginn im Theater zu sein. Bitte verzichten Sie auf das Mitführen von großen Gepäckstücken oder Rucksäcken sowie Laptops, professionelle Fotografie-, Video- oder Audio-Geräte o. Ä. Wir danken für Ihr Verständnis."
+                        "label": "'.self::param('KEY_BACK_DATA_Additional_Front6:LABEL',' ').'",
+                        "value": "'.self::param('KEY_BACK_DATA_Additional_Front6:VALUE',' ').'"
                     }
                     
                 ],
@@ -163,26 +148,27 @@ class PKPass
                     {
                         "changeMessage": "restxt_chg_date",
                         "key": "KEY_HEADER_LOCATION_DATE",
-                        "label": "Stage The...",
-                        "value": "07.06.2023 19:30"
+                        "label": "'.self::param('KEY_HEADER_LOCATION_DATE:LABEL','').'",
+                        "value": "'.self::param('KEY_HEADER_LOCATION_DATE:VALUE','').'"
                     }
                 ],
                 "primaryFields": [
                     {
                         "changeMessage": "restxt_chg_event",
                         "key": "KEY_PRIMERY",
-                        "label": "",
-                        "value": "ROMEO & JULIA  Liebe ist alles -..."
+                        "label": "'.self::param('KEY_PRIMERY:LABEL','').'",
+                        "value": "'.self::param('KEY_PRIMERY:VALUE','').'"
                     }
                 ],
                 "secondaryFields": [
                     {
                         "key": "KEY_SECONDARY_TICKETTYPENAME",
-                        "label": "",
-                        "value": "Normalpreis"
+                        "label": "'.self::param('KEY_SECONDARY_TICKETTYPENAME:LABEL',' ').'",
+                        "value": "'.self::param('KEY_SECONDARY_TICKETTYPENAME:VALUE',' ').'"
                     }
                 ]
             },
+            "relevantDate": "'.self::param('utc_datetime','').'",
             "barcode": {
                 "format": "PKBarcodeFormatQR",
                 "message": "' . $id . '",
@@ -203,7 +189,7 @@ class PKPass
         $pass->addFile(App::get('tempPath').'/'.self::env('apple_strip'), 'strip.png');
 
         if ( !$pass->create(true)) { // Create and output the PKPass
-            echo 'Error: ' . $pass->getError();
+            // echo 'Error: ' . $pass->getError();
         }
 
     }
