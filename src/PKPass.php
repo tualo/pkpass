@@ -71,7 +71,10 @@ class PKPass
             "organizationName": "'.self::env('apple_organizationName').'",
             "teamIdentifier": "'.self::env('apple_teamIdentifier').'",
             "serialNumber": "' . $id . '",
-            "backgroundColor": "'.self::param('apple_background','rgb(240,240,240)').'",
+            "backgroundColor": "'.self::param('apple_backgroundColor','rgb(240,240,240)').'",
+            "foregroundColor": "'.self::param('apple_foregroundColor','rgb(0,0,0)').'",
+            "labelColor": "'.self::param('apple_labelColor','rgb(0,0,0)').'",
+
             "logoText": "'.self::param('apple_logoText').'",
             "description": "' . self::param('description','*description* nicht angegeben') . '",
             "eventTicket": {
