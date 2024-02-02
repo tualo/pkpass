@@ -90,11 +90,16 @@ class PKPass
         }
         }');
 
+        file_put_contents(App::get('tempPath').'/'.self::env('apple_icon'), base64_decode($files->getBase64('titel',self::env('apple_icon'))));
+        file_put_contents(App::get('tempPath').'/'.self::env('apple_icon2x'), base64_decode($files->getBase64('titel',self::env('apple_icon2x'))));
+        file_put_contents(App::get('tempPath').'/'.self::env('apple_logo'), base64_decode($files->getBase64('titel',self::env('apple_logo'))));
+        file_put_contents(App::get('tempPath').'/'.self::env('apple_strip'), base64_decode($files->getBase64('titel',self::env('apple_strip'))));
+
         // add files to the PKPass package
-        $pass->addFile('icon.png');
-        $pass->addFile('icon@2x.png');
-        $pass->addFile('logo.png');
-        $pass->addFile('background.png', 'strip.png');
+        $pass->addFile(self::env('apple_icon'),'icon.png');
+        $pass->addFile(self::env('apple_icon2x'),'icon@2x.png');
+        $pass->addFile(self::env('apple_logo'),'logo.png');
+        $pass->addFile(self::env('apple_strip'), 'strip.png');
 
         if ( !$pass->create(true)) { // Create and output the PKPass
             echo 'Error: ' . $pass->getError();

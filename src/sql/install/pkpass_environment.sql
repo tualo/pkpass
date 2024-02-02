@@ -13,3 +13,9 @@ insert ignore into pkpass_environment (id, val) values ('apple_organizationName'
 insert ignore into pkpass_environment (id, val) values ('apple_teamIdentifier', '');
 insert ignore into pkpass_environment (id, val) values ('apple_logoText', '');
 insert ignore into pkpass_environment (id, val) values ('apple_backFieldsLabel', '');
+
+
+insert ignore into pkpass_environment (id, val) values ('apple_icon', '');
+insert ignore into pkpass_environment (id, val) values ('apple_icon2x', '');
+insert ignore into pkpass_environment (id, val) values ('apple_logo', '');
+insert ignore into pkpass_environment (id, val) values ('apple_strip', '');
