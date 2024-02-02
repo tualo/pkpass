@@ -19,6 +19,7 @@ insert ignore into pkpass_environment (id, val) values ('apple_icon', '');
 insert ignore into pkpass_environment (id, val) values ('apple_icon2x', '');
 insert ignore into pkpass_environment (id, val) values ('apple_logo', '');
 insert ignore into pkpass_environment (id, val) values ('apple_strip', '');
+insert ignore into pkpass_environment (id, val) values ('apple_background', '');
 
 
 

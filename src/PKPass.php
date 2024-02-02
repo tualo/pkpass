@@ -78,14 +78,7 @@ class PKPass
             'logoText' => self::param('apple_logoText'),
             'description' => self::param('description',''),
             'eventTicket' => [
-                'auxiliaryFields' => [
-                    [
-                        'changeMessage' => 'restxt_chg_seat',
-                        'key' => 'KEY_AUX_SEAT_1',
-                        'label' => self::param('KEY_AUX_SEAT_1:LABEL',''),
-                        'value' => self::param('KEY_AUX_SEAT_1:VALUE','')
-                    ]
-                ],
+                
                 'backFields' => [
                     [
                         'key' => 'KEY_ADDITIONAL_ACCESSCODE',
@@ -162,12 +155,15 @@ class PKPass
                         'value' => self::param('KEY_PRIMERY:VALUE','')
                     ]
                 ],
-                "auxiliaryFields" => [
-                        "key" => "KEY_AUXILIARY",
-                        "label" => self::param('KEY_AUXILIARY:LABEL',''),
-                        "value" => self::param('KEY_AUXILIARY:VALUE',''),
-                        "changeMessage" => "restxt_chg_event"
+                'auxiliaryFields' => [
+                    [
+                        'changeMessage' => 'restxt_chg_seat',
+                        'key' => 'KEY_AUX_SEAT_1',
+                        'label' => self::param('KEY_AUXILIARY:LABEL',''),
+                        'value' => self::param('KEY_AUXILIARY:VALUE','')
+                    ]
                 ],
+                
                 'secondaryFields' => [
                     [
                         'key' => 'KEY_SECONDARY_TICKETTYPENAME',
