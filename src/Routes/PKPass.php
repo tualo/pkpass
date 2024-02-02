@@ -8,17 +8,15 @@ use Tualo\Office\PKPass\PKPass as P;
 
 class PKPass implements IRoute{
     public static function register(){
-        BasicRoute::add('/pkpass/(?P<channel>[\w.\/\-]+)',function($matches){
+        BasicRoute::add('/pkpass/test',function($matches){
             try{
                 App::contenttype('application/json');
-                if (!isset($_POST['message'])) throw new \Exception('message is missing!');
-                App::result('r',T::sendMessage($matches['channel'],$_POST['messgae']));
-
-                App::result('success',true);
+                P::pass('test','34.50','Beats','Beats Studio Wireless');
+                exit();
             }catch(\Exception $e){
                 App::result('msg', $e->getMessage());
             }
-        },['post'],true);
+        },['get'],true);
 
     }
 }

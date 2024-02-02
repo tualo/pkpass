@@ -2,10 +2,10 @@
 
 namespace Tualo\Office\PKPass;
 
-use Tualo\Office\Basic\TualoApplication;
+use Tualo\Office\Basic\TualoApplication AS App; 
 use Ramsey\Uuid\Uuid;
 use PKPass\PKPass AS Pass;
-
+use Tualo\Office\DS\DSFiles;
 class PKPass
 {
 
@@ -23,10 +23,10 @@ class PKPass
     public static function getEnvironment(): array
     {
         if (is_null(self::$ENV)) {
-            $db = TualoApplication::get('session')->getDB();
+            $db = App::get('session')->getDB();
             try {
                 if (!is_null($db)) {
-                    $data = $db->direct('select id,val from teams_environment');
+                    $data = $db->direct('select id,val from pkpass_environment');
                     foreach ($data as $d) {
                         self::$ENV[$d['id']] = $d['val'];
                     }
@@ -40,21 +40,26 @@ class PKPass
     public static function pass(
         string $id,
         string $balance,
-        string $name
+        string $name,
+        string $description
     ) : mixed {
         $pass = new Pass();
-        $pass->setCertificatePath('../../../Certificate.p12'); // Set the path to your Pass Certificate (.p12 file)
-        $pass->setCertificatePassword('test123'); // Set password for certificate
-        $pass->setWwdrCertificatePath('../../../AppleWWDR.pem');
+        $files=DSFiles::instance('tualocms_bilder');
+        file_put_contents(App::get('tempPath').'/c.p12', base64_decode($files->getBase64('titel',self::env('certificate'))));
+        file_put_contents(App::get('tempPath').'/AppleWWDR.cer', base64_decode($files->getBase64('titel',self::env('wwdr_certificate'))));
+
+        $pass->setCertificatePath(App::get('tempPath').'/c.p12'); // Set the path to your Pass Certificate (.p12 file)
+        $pass->setCertificatePassword(self::env('cert_pass')); // Set password for certificate
+        $pass->setWwdrCertificatePath(App::get('tempPath').'/AppleWWDR.cer');
         $pass->setData('{
-            "passTypeIdentifier": "pass.com.apple.test",
+            "passTypeIdentifier": "'.self::env('passTypeIdentifier').'",
             "formatVersion": 1,
-            "organizationName": "Starbucks",
-            "teamIdentifier": "AGK5BZEN3E",
+            "organizationName": "'.self::env('organizationName').'",
+            "teamIdentifier": "'.self::env('teamIdentifier').'",
             "serialNumber": "' . $id . '",
             "backgroundColor": "rgb(240,240,240)",
-            "logoText": "Starbucks",
-            "description": "Demo pass",
+            "logoText": "'.self::env('logoText').'",
+            "description": "' . $description . '",
             "storeCard": {
             "secondaryFields": [
                 {
@@ -72,7 +77,7 @@ class PKPass
             "backFields": [
                 {
                     "key": "id",
-                    "label": "Card Number",
+                    "label": "'.self::env('backFieldsLabel').'",
                     "value": "' . $id . '"
                 }
             ]
