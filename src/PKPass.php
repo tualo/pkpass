@@ -177,6 +177,7 @@ class PKPass
             }
         }');
 
+        
         file_put_contents(App::get('tempPath').'/'.self::env('apple_icon'), self::binary($files->getBase64('titel',self::env('apple_icon'))));
         file_put_contents(App::get('tempPath').'/'.self::env('apple_icon2x'), self::binary($files->getBase64('titel',self::env('apple_icon2x'))));
         file_put_contents(App::get('tempPath').'/'.self::env('apple_logo'), self::binary($files->getBase64('titel',self::env('apple_logo'))));
@@ -191,7 +192,7 @@ class PKPass
         if ( !$pass->create(true)) { // Create and output the PKPass
             // echo 'Error: ' . $pass->getError();
         }
-
+        return true;
     }
 }
 
