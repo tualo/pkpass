@@ -71,8 +71,8 @@ class PKPass
             "organizationName": "'.self::env('apple_organizationName').'",
             "teamIdentifier": "'.self::env('apple_teamIdentifier').'",
             "serialNumber": "' . $id . '",
-            "backgroundColor": "rgb(240,240,240)",
-            "logoText": "'.self::env('apple_logoText').'",
+            "backgroundColor": "'.self::param('apple_background','rgb(240,240,240)').'",
+            "logoText": "'.self::param('apple_logoText').'",
             "description": "' . self::param('description','*description* nicht angegeben') . '",
             "eventTicket": {
                 "auxiliaryFields": [
@@ -177,7 +177,7 @@ class PKPass
             }
         }');
 
-        
+
         file_put_contents(App::get('tempPath').'/'.self::env('apple_icon'), self::binary($files->getBase64('titel',self::env('apple_icon'))));
         file_put_contents(App::get('tempPath').'/'.self::env('apple_icon2x'), self::binary($files->getBase64('titel',self::env('apple_icon2x'))));
         file_put_contents(App::get('tempPath').'/'.self::env('apple_logo'), self::binary($files->getBase64('titel',self::env('apple_logo'))));
