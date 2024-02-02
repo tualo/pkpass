@@ -45,20 +45,20 @@ class PKPass
     ) : mixed {
         $pass = new Pass();
         $files=DSFiles::instance('tualocms_bilder');
-        file_put_contents(App::get('tempPath').'/c.p12', base64_decode($files->getBase64('titel',self::env('certificate'))));
-        file_put_contents(App::get('tempPath').'/AppleWWDR.cer', base64_decode($files->getBase64('titel',self::env('wwdr_certificate'))));
+        file_put_contents(App::get('tempPath').'/c.p12', base64_decode($files->getBase64('titel',self::env('apple_certificate'))));
+        file_put_contents(App::get('tempPath').'/AppleWWDR.cer', base64_decode($files->getBase64('titel',self::env('apple_wwdr_certificate'))));
 
         $pass->setCertificatePath(App::get('tempPath').'/c.p12'); // Set the path to your Pass Certificate (.p12 file)
-        $pass->setCertificatePassword(self::env('cert_pass')); // Set password for certificate
+        $pass->setCertificatePassword(self::env('apple_cert_pass')); // Set password for certificate
         $pass->setWwdrCertificatePath(App::get('tempPath').'/AppleWWDR.cer');
         $pass->setData('{
-            "passTypeIdentifier": "'.self::env('passTypeIdentifier').'",
+            "passTypeIdentifier": "'.self::env('apple_passTypeIdentifier').'",
             "formatVersion": 1,
-            "organizationName": "'.self::env('organizationName').'",
-            "teamIdentifier": "'.self::env('teamIdentifier').'",
+            "organizationName": "'.self::env('apple_organizationName').'",
+            "teamIdentifier": "'.self::env('apple_teamIdentifier').'",
             "serialNumber": "' . $id . '",
             "backgroundColor": "rgb(240,240,240)",
-            "logoText": "'.self::env('logoText').'",
+            "logoText": "'.self::env('apple_logoText').'",
             "description": "' . $description . '",
             "storeCard": {
             "secondaryFields": [
@@ -77,7 +77,7 @@ class PKPass
             "backFields": [
                 {
                     "key": "id",
-                    "label": "'.self::env('backFieldsLabel').'",
+                    "label": "'.self::env('apple_backFieldsLabel').'",
                     "value": "' . $id . '"
                 }
             ]
