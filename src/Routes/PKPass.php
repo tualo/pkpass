@@ -12,6 +12,9 @@ class PKPass implements IRoute{
             try{
                 App::contenttype('application/json');
 
+                $utc = new DateTimeImmutable('2038-12-25 17:30:00', new DateTimeZone('Europe/Berlin'));
+                $utc->setTimezone(new DateTimeZone("UTC"));
+
                 $param=[];
                 
                 $param['KEY_ADDITIONAL_ACCESSCODE:LABEL']='Zugriffscode';
