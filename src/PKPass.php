@@ -196,8 +196,8 @@ class PKPass
 
         if (isset(self::$params['apple_strip'])){
             $params_files=DSFiles::instance(self::$params['apple_strip'][0]);
-            file_put_contents(App::get('tempPath').'/'.self::$params['apple_strip'], self::binary($files->getBase64('titel',self::$params['apple_strip'][1])));
-            $pass->addFile(App::get('tempPath').'/'.self::$params['apple_strip'], 'background.png');
+            file_put_contents(App::get('tempPath').'/'.self::$params['apple_strip'][1], self::binary($params_files->getBase64('id',self::$params['apple_strip'][1])));
+            $pass->addFile(App::get('tempPath').'/'.self::$params['apple_strip'][1], 'background.png');
         }else{
             if (self::env('apple_strip','')!=''){
                 file_put_contents(App::get('tempPath').'/'.self::env('apple_strip'), self::binary($files->getBase64('titel',self::env('apple_strip'))));
@@ -207,8 +207,8 @@ class PKPass
 
         if (isset(self::$params['apple_background'])){
             $params_files=DSFiles::instance(self::$params['apple_background'][0]);
-            file_put_contents(App::get('tempPath').'/'.self::$params['apple_background'], self::binary($files->getBase64('titel',self::$params['apple_background'][1])));
-            $pass->addFile(App::get('tempPath').'/'.self::$params['apple_background'], 'background.png');
+            file_put_contents(App::get('tempPath').'/'.self::$params['apple_background'][1], self::binary($params_files->getBase64('id',self::$params['apple_background'][1])));
+            $pass->addFile(App::get('tempPath').'/'.self::$params['apple_background'][1], 'background.png');
         }else{
             if (self::env('apple_background','')!=''){
                 file_put_contents(App::get('tempPath').'/'.self::env('apple_background'), self::binary($files->getBase64('titel',self::env('apple_background'))));
