@@ -58,10 +58,11 @@ class PKPass
         array $params
     ) : mixed {
         $pass = new Pass();
+        self::$params = $params;
+
         $files=DSFiles::instance('tualocms_bilder');
         file_put_contents(App::get('tempPath').'/c.p12', self::binary($files->getBase64('titel',self::env('apple_certificate'))));
         file_put_contents(App::get('tempPath').'/AppleWWDR.cer', self::binary($files->getBase64('titel',self::env('apple_wwdr_certificate'))));
-        self::$params = $params;
         $pass->setCertificatePath(App::get('tempPath').'/c.p12'); // Set the path to your Pass Certificate (.p12 file)
         $pass->setCertificatePassword(self::env('apple_cert_pass')); // Set password for certificate
         $pass->setWwdrCertificatePath(App::get('tempPath').'/AppleWWDR.cer');
@@ -191,13 +192,28 @@ class PKPass
         $pass->addFile(App::get('tempPath').'/'.self::env('apple_icon'),'icon.png');
         $pass->addFile(App::get('tempPath').'/'.self::env('apple_icon2x'),'icon@2x.png');
         $pass->addFile(App::get('tempPath').'/'.self::env('apple_logo'),'logo.png');
-        if (self::env('apple_strip','')!=''){
-            file_put_contents(App::get('tempPath').'/'.self::env('apple_strip'), self::binary($files->getBase64('titel',self::env('apple_strip'))));
-            $pass->addFile(App::get('tempPath').'/'.self::env('apple_strip'), 'strip.png');
+
+
+        if (isset(self::$params['apple_strip'])){
+            $params_files=DSFiles::instance(self::$params['apple_strip'][0]);
+            file_put_contents(App::get('tempPath').'/'.self::$params['apple_strip'], self::binary($files->getBase64('titel',self::$params['apple_strip'][1])));
+            $pass->addFile(App::get('tempPath').'/'.self::$params['apple_strip'], 'background.png');
+        }else{
+            if (self::env('apple_strip','')!=''){
+                file_put_contents(App::get('tempPath').'/'.self::env('apple_strip'), self::binary($files->getBase64('titel',self::env('apple_strip'))));
+                $pass->addFile(App::get('tempPath').'/'.self::env('apple_strip'), 'strip.png');
+            }
         }
-        if (self::env('apple_background','')!=''){
-            file_put_contents(App::get('tempPath').'/'.self::env('apple_background'), self::binary($files->getBase64('titel',self::env('apple_background'))));
-            $pass->addFile(App::get('tempPath').'/'.self::env('apple_background'), 'background.png');
+
+        if (isset(self::$params['apple_background'])){
+            $params_files=DSFiles::instance(self::$params['apple_background'][0]);
+            file_put_contents(App::get('tempPath').'/'.self::$params['apple_background'], self::binary($files->getBase64('titel',self::$params['apple_background'][1])));
+            $pass->addFile(App::get('tempPath').'/'.self::$params['apple_background'], 'background.png');
+        }else{
+            if (self::env('apple_background','')!=''){
+                file_put_contents(App::get('tempPath').'/'.self::env('apple_background'), self::binary($files->getBase64('titel',self::env('apple_background'))));
+                $pass->addFile(App::get('tempPath').'/'.self::env('apple_background'), 'background.png');
+            }
         }
 
         if ( !$pass->create(true)) { // Create and output the PKPass
