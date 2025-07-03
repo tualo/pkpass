@@ -19,7 +19,7 @@
   },
   "minimum-stability": "dev",
   "require": {
-    "pkpass/pkpass": "*"
+    "pkpass/pkpass": "~2.4.0"
   },
-  "version": "1.0.1"
+  "version": "1.0.2"
 }
