@@ -1,22 +1,25 @@
 {
-    "name": "tualo/pkpass",
-    "description": "tualo - pkpass",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Thomas Hoffmann",
-            "email": "thomas.hoffmann@tualo.de"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Tualo\\Office\\PKPass\\": "src/"
-        },
-        "files": ["src/functions.php"]
-    },
-    "minimum-stability": "dev",
-    "require": {
-        "pkpass/pkpass": "*"
+  "name": "tualo/pkpass",
+  "description": "tualo - pkpass",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Thomas Hoffmann",
+      "email": "thomas.hoffmann@tualo.de"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Tualo\\Office\\PKPass\\": "src/"
+    },
+    "files": [
+      "src/functions.php"
+    ]
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "pkpass/pkpass": "*"
+  },
+  "version": "1.0.1"
 }
